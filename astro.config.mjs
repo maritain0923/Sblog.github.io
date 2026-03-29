@@ -3,10 +3,7 @@ import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 
 export default defineConfig({
+  site: 'https://maritain0923.github.io/Sblog.github.io',
   integrations: [tailwind(), mdx()],
-  markdown: {
-    shikiConfig: {
-      theme: 'github-light',
-    },
-  },
+  markdown: { shikiConfig: { theme: 'github-light' } },
 });
