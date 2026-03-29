@@ -1,0 +1,76 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="关于我" titleEn="About">
+  <header class="mb-10">
+    <div class="text-[0.68rem] font-mono tracking-[0.18em] text-faint uppercase mb-2">About</div>
+    <h1 class="text-2xl font-sans font-medium text-ink">
+      <span class="zh">关于我</span><span class="en">About Me</span>
+    </h1>
+  </header>
+
+  <hr class="border-line/50 mb-10" />
+
+  <div class="prose max-w-none">
+
+    <!-- 中文 -->
+    <div class="zh">
+      <h2>你好</h2>
+      <p>
+        我是 <strong>[你的名字]</strong>，目前就读于 [学校] [专业] 专业。
+        这个网站是我记录思考、存放文字的地方。
+      </p>
+
+      <h2>此时此刻</h2>
+      <p>
+        正在学习 [...]，对 [...] 充满兴趣。<br />
+        平时 [...]，假期 [...]。
+      </p>
+
+      <h2>为什么有这个网站</h2>
+      <p>
+        想把脑子里的东西写下来。
+        把模糊的感受变成清晰的文字，这个过程本身就值得。
+        这里不是简历，不是展示台，就是一个普通人的数字花园。
+      </p>
+
+      <h2>联系我</h2>
+      <p>
+        欢迎发邮件：<a href="mailto:your@email.com">your@email.com</a>
+      </p>
+    </div>
+
+    <!-- English -->
+    <div class="en">
+      <h2>Hello</h2>
+      <p>
+        I'm <strong>[Your Name]</strong>, currently studying [Major] at [University].
+        This site is where I write things down and keep my thoughts.
+      </p>
+
+      <h2>Right Now</h2>
+      <p>
+        Learning about [...], fascinated by [...].<br />
+        Based in [...], from [...].
+      </p>
+
+      <h2>Why This Site</h2>
+      <p>
+        I wanted a place to turn vague thoughts into clear words.
+        This isn't a portfolio or a resume — it's just a digital garden where I plant things and let them grow.
+      </p>
+
+      <h2>Get in Touch</h2>
+      <p>
+        Feel free to email me: <a href="mailto:your@email.com">your@email.com</a>
+      </p>
+    </div>
+
+  </div>
+
+  <blockquote class="border-l-2 border-accent/30 pl-5 text-sub text-[0.88rem] italic mt-14">
+    <span class="zh">怕什么真理无穷，进一寸有一寸的欢喜。<span class="block text-[0.72rem] not-italic text-faint mt-1">— 胡适</span></span>
+    <span class="en">Ever tried. Ever failed. No matter. Try again. Fail again. Fail better.<span class="block text-[0.72rem] not-italic text-faint mt-1">— Samuel Beckett</span></span>
+  </blockquote>
+</Layout>

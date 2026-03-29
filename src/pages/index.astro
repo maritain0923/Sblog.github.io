@@ -1,0 +1,129 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const blogs = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 4);
+
+const thoughts = (await getCollection('thoughts'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 4);
+
+function fmtDate(d: Date) {
+  return d.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+}
+---
+
+<Layout>
+  <!-- ── Hero ── -->
+  <section class="mb-12">
+    <div class="text-[0.7rem] font-mono tracking-[0.2em] text-faint uppercase mb-3">
+      <span class="zh">你好，欢迎</span>
+      <span class="en">Hi, welcome</span>
+    </div>
+
+    <h1 class="text-[1.7rem] font-sans font-medium text-ink leading-snug mb-5">
+      <span class="zh">这里是我的数字花园</span>
+      <span class="en">This is my digital garden</span>
+    </h1>
+
+    <p class="text-sub leading-8 text-[0.96rem] max-w-lg">
+      <span class="zh">
+        我在这里写一写自己的东西，存一存自己的思考。<br />
+        博客记录技术与学习，随想收纳碎片与感受。
+      </span>
+      <span class="en">
+        A place where I write things down and keep my thoughts.<br />
+        Blog for learning notes, Thoughts for fragments and feelings.
+      </span>
+    </p>
+  </section>
+
+  <hr class="border-line/50 mb-12" />
+
+  <!-- ── Navigation cards ── -->
+  <section class="mb-14">
+    <div class="text-[0.68rem] font-mono tracking-[0.18em] text-faint uppercase mb-5">
+      <span class="zh">页面导览</span>
+      <span class="en">Navigation</span>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+      {[
+        { href:'/blog',     zh:'博客',  en:'Blog',     descZh:'技术笔记与学习记录', descEn:'Notes & learning' },
+        { href:'/thoughts', zh:'随想',  en:'Thoughts', descZh:'碎片思考，不成体系',  descEn:'Fragments & feelings' },
+        { href:'/about',    zh:'关于我', en:'About',    descZh:'我是谁，在做什么',   descEn:'Who I am' },
+      ].map(item => (
+        <a
+          href={item.href}
+          class="group block border border-line rounded-xl px-5 py-4 hover:border-accent/40 hover:bg-accentL/30 transition-all duration-200"
+        >
+          <div class="font-medium text-ink text-sm mb-1 group-hover:text-accent transition-colors">
+            <span class="zh">{item.zh}</span>
+            <span class="en">{item.en}</span>
+          </div>
+          <div class="text-[0.72rem] text-faint">
+            <span class="zh">{item.descZh}</span>
+            <span class="en">{item.descEn}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── Recent Blog ── -->
+  {blogs.length > 0 && (
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-5">
+        <div class="text-[0.68rem] font-mono tracking-[0.18em] text-faint uppercase">
+          <span class="zh">最近博客</span><span class="en">Recent Blog</span>
+        </div>
+        <a href="/blog" class="text-[0.72rem] font-mono text-accent hover:opacity-70 transition-opacity">
+          <span class="zh">全部 →</span><span class="en">All →</span>
+        </a>
+      </div>
+      <div class="divide-y divide-line/40">
+        {blogs.map(post => (
+          <a href={`/blog/${post.slug}`} class="group flex items-center gap-4 py-3 hover:bg-accentL/20 -mx-2 px-2 rounded-lg transition-colors">
+            <span class="font-mono text-[0.68rem] text-faint w-[3.2rem] shrink-0">{fmtDate(post.data.date)}</span>
+            <span class="text-[0.9rem] text-ink group-hover:text-accent transition-colors flex-1 truncate">
+              <span class="zh">{post.data.title}</span>
+              <span class="en">{post.data.titleEn ?? post.data.title}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ── Recent Thoughts ── -->
+  {thoughts.length > 0 && (
+    <section class="mb-14">
+      <div class="flex items-center justify-between mb-5">
+        <div class="text-[0.68rem] font-mono tracking-[0.18em] text-faint uppercase">
+          <span class="zh">最近随想</span><span class="en">Recent Thoughts</span>
+        </div>
+        <a href="/thoughts" class="text-[0.72rem] font-mono text-accent hover:opacity-70 transition-opacity">
+          <span class="zh">全部 →</span><span class="en">All →</span>
+        </a>
+      </div>
+      <div class="divide-y divide-line/40">
+        {thoughts.map(post => (
+          <a href={`/thoughts/${post.slug}`} class="group flex items-center gap-4 py-3 hover:bg-accentL/20 -mx-2 px-2 rounded-lg transition-colors">
+            <span class="font-mono text-[0.68rem] text-faint w-[3.2rem] shrink-0">{fmtDate(post.data.date)}</span>
+            <span class="text-[0.9rem] text-ink group-hover:text-accent transition-colors flex-1 truncate">
+              <span class="zh">{post.data.title}</span>
+              <span class="en">{post.data.titleEn ?? post.data.title}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ── Quote ── -->
+  <blockquote class="border-l-2 border-accent/30 pl-5 text-sub text-[0.88rem] italic">
+    <span class="zh">怕什么真理无穷，进一寸有一寸的欢喜。<span class="block text-[0.72rem] not-italic text-faint mt-1">— 胡适</span></span>
+    <span class="en">Ever tried. Ever failed. No matter. Try again. Fail again. Fail better.<span class="block text-[0.72rem] not-italic text-faint mt-1">— Samuel Beckett</span></span>
+  </blockquote>
+</Layout>

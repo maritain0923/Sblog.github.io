@@ -1,0 +1,47 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const d = post.data.date;
+const dateZh = d.toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' });
+const dateEn = d.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+  <a href="/blog" class="inline-flex items-center gap-1 text-[0.75rem] font-mono text-faint hover:text-accent transition-colors mb-8">
+    ← <span class="zh">返回博客</span><span class="en">Back to Blog</span>
+  </a>
+
+  <header class="mb-8">
+    <h1 class="text-2xl font-sans font-medium text-ink leading-snug mb-4">
+      <span class="zh">{post.data.title}</span>
+      <span class="en">{post.data.titleEn ?? post.data.title}</span>
+    </h1>
+    <div class="flex items-center gap-3 flex-wrap">
+      <time class="font-mono text-[0.72rem] text-faint">
+        <span class="zh">{dateZh}</span>
+        <span class="en">{dateEn}</span>
+      </time>
+      {post.data.tags?.map(tag => <span class="tag">{tag}</span>)}
+    </div>
+  </header>
+
+  <hr class="border-line/50 mb-10" />
+
+  <article class="prose max-w-none">
+    <Content />
+  </article>
+
+  <div class="mt-16 pt-8 border-t border-line/50">
+    <a href="/blog" class="text-[0.75rem] font-mono text-faint hover:text-accent transition-colors">
+      ← <span class="zh">返回博客列表</span><span class="en">Back to Blog</span>
+    </a>
+  </div>
+</Layout>

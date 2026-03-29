@@ -1,0 +1,125 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  titleEn?: string;
+  description?: string;
+}
+
+const { title = '我的小站', titleEn = 'My Garden', description = '记录思考，存放文字' } = Astro.props;
+const pageTitle = `${title} · 我的小站`;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{pageTitle}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+
+  <!-- 深色外框 wrapper -->
+  <div class="min-h-screen px-4 py-7 md:px-10 md:py-12">
+    <div class="max-w-[660px] mx-auto bg-paper rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.5)] overflow-hidden">
+
+      <!-- ── Nav ── -->
+      <nav id="site-nav" class="sticky top-0 z-50 transition-all duration-300 bg-paper">
+        <div class="px-7 md:px-10 py-4 flex items-center justify-between border-b border-line/60">
+
+          <!-- 网站名 -->
+          <a href="/" class="font-mono text-[0.75rem] tracking-widest text-ink hover:text-accent transition-colors uppercase">
+            <span class="zh">我的小站</span>
+            <span class="en">My Garden</span>
+          </a>
+
+          <div class="flex items-center gap-1.5">
+            <!-- 页面导航 -->
+            <div class="flex items-center gap-5 mr-5 font-latin text-[0.82rem] text-sub">
+              <a href="/blog"     class="nav-link hover:text-ink transition-colors"><span class="zh">博客</span><span class="en">Blog</span></a>
+              <a href="/thoughts" class="nav-link hover:text-ink transition-colors"><span class="zh">随想</span><span class="en">Thoughts</span></a>
+              <a href="/about"    class="nav-link hover:text-ink transition-colors"><span class="zh">关于</span><span class="en">About</span></a>
+            </div>
+
+            <!-- 语言切换 -->
+            <div class="flex items-center gap-0.5 border border-line rounded-full px-1 py-0.5">
+              <button id="btn-zh" class="lang-btn active" aria-label="切换至中文">中</button>
+              <span class="text-line text-xs">/</span>
+              <button id="btn-en" class="lang-btn inactive" aria-label="Switch to English">EN</button>
+            </div>
+          </div>
+
+        </div>
+      </nav>
+
+      <!-- ── Main ── -->
+      <main class="px-7 md:px-12 py-12 min-h-[68vh]">
+        <slot />
+      </main>
+
+      <!-- ── Footer ── -->
+      <footer class="px-7 md:px-12 py-7 border-t border-line/50">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p class="text-[0.72rem] font-mono text-faint hover:text-sub transition-colors cursor-default select-none">
+            <span class="zh">这不是博物馆，而是一座花园。一直在生长。</span>
+            <span class="en">This is a garden, not a museum. Work in progress.</span>
+          </p>
+          <div class="flex items-center gap-3 text-[0.72rem] font-mono text-faint">
+            <a href="https://github.com" target="_blank" rel="noopener" class="hover:text-ink transition-colors">GitHub</a>
+            <span class="text-line">·</span>
+            <a href="mailto:your@email.com" class="hover:text-ink transition-colors">Email</a>
+            <span class="text-line">·</span>
+            <span>© {new Date().getFullYear()}</span>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+</body>
+
+<script>
+  // ── Language toggle ──
+  const html = document.documentElement;
+  const btnZh = document.getElementById('btn-zh')!;
+  const btnEn = document.getElementById('btn-en')!;
+
+  function setLang(lang: 'zh' | 'en') {
+    html.setAttribute('data-lang', lang);
+    localStorage.setItem('lang', lang);
+    if (lang === 'zh') {
+      btnZh.className = 'lang-btn active';
+      btnEn.className = 'lang-btn inactive';
+    } else {
+      btnEn.className = 'lang-btn active';
+      btnZh.className = 'lang-btn inactive';
+    }
+  }
+
+  // Restore preference
+  const saved = localStorage.getItem('lang') as 'zh' | 'en' | null;
+  if (saved) setLang(saved);
+
+  btnZh.addEventListener('click', () => setLang('zh'));
+  btnEn.addEventListener('click', () => setLang('en'));
+
+  // ── Nav glass on scroll ──
+  const nav = document.getElementById('site-nav')!;
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('nav-glass', window.scrollY > 24);
+    nav.classList.toggle('bg-paper', window.scrollY <= 24);
+  }, { passive: true });
+
+  // ── Highlight active nav link ──
+  document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach(link => {
+    const path = new URL(link.href).pathname;
+    if (path !== '/' && window.location.pathname.startsWith(path)) {
+      link.classList.add('text-ink', 'font-medium');
+    }
+  });
+</script>
+</html>

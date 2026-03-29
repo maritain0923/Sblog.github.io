@@ -1,0 +1,76 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const byYear: Record<number, typeof posts> = {};
+for (const p of posts) {
+  const y = p.data.date.getFullYear();
+  (byYear[y] ??= []).push(p);
+}
+const years = Object.keys(byYear).map(Number).sort((a,b) => b-a);
+---
+
+<Layout title="博客" titleEn="Blog">
+  <header class="mb-10">
+    <div class="text-[0.68rem] font-mono tracking-[0.18em] text-faint uppercase mb-2">Blog</div>
+    <h1 class="text-2xl font-sans font-medium text-ink">
+      <span class="zh">博客</span><span class="en">Blog</span>
+    </h1>
+    <p class="text-faint text-[0.8rem] font-mono mt-1.5">
+      <span class="zh">{posts.length} 篇文章</span>
+      <span class="en">{posts.length} posts</span>
+    </p>
+  </header>
+
+  {posts.length === 0 ? (
+    <p class="text-center py-20 text-faint text-sm">
+      <span class="zh">还没有文章，快来写第一篇吧。</span>
+      <span class="en">No posts yet. Write your first one!</span>
+    </p>
+  ) : (
+    <div class="space-y-10">
+      {years.map(year => (
+        <div>
+          <div class="text-[0.68rem] font-mono text-faint/60 mb-4 tracking-widest">{year}</div>
+          <div class="relative">
+            <!-- 时间轴竖线 -->
+            <div class="absolute left-1.5 top-2 bottom-2 w-px bg-line/60"></div>
+            <div class="space-y-px pl-7">
+              {byYear[year].map(post => (
+                <a
+                  href={`/blog/${post.slug}`}
+                  class="group flex items-start gap-4 py-3 hover:bg-accentL/20 -ml-7 pl-7 -mr-2 pr-2 rounded-lg transition-colors relative"
+                >
+                  <!-- Timeline dot -->
+                  <div class="absolute left-[0.31rem] top-[1.05rem] w-2 h-2 rounded-full border-2 border-line bg-paper group-hover:border-accent group-hover:bg-accentL transition-colors"></div>
+
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-baseline gap-2 flex-wrap">
+                      <span class="text-[0.9rem] text-ink group-hover:text-accent transition-colors font-medium">
+                        <span class="zh">{post.data.title}</span>
+                        <span class="en">{post.data.titleEn ?? post.data.title}</span>
+                      </span>
+                      {post.data.tags?.map(tag => <span class="tag">{tag}</span>)}
+                    </div>
+                    {post.data.description && (
+                      <p class="text-[0.75rem] text-faint mt-0.5 truncate">
+                        <span class="zh">{post.data.description}</span>
+                        <span class="en">{post.data.descriptionEn ?? post.data.description}</span>
+                      </p>
+                    )}
+                  </div>
+                  <time class="font-mono text-[0.68rem] text-faint shrink-0 mt-1">
+                    {post.data.date.toLocaleDateString('zh-CN', { month:'2-digit', day:'2-digit' })}
+                  </time>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</Layout>
