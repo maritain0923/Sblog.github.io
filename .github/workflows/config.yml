@@ -1,0 +1,36 @@
+backend:
+  name: github
+  repo: maritain0923/Sblog.github.io
+  branch: main
+  auth_type: pkce
+  app_id: 你的ClientID
+
+media_folder: public/images
+public_folder: /Sblog.github.io/images
+
+locale: zh_Hans
+
+collections:
+  - name: blog
+    label: 博客
+    folder: src/content/blog
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 英文标题, name: titleEn, widget: string, required: false }
+      - { label: 日期, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: 简介, name: description, widget: string, required: false }
+      - { label: 标签, name: tags, widget: list, required: false }
+      - { label: 正文, name: body, widget: markdown }
+
+  - name: thoughts
+    label: 随想
+    folder: src/content/thoughts
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 日期, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: 简介, name: description, widget: string, required: false }
+      - { label: 正文, name: body, widget: markdown }
